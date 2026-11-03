@@ -1,0 +1,13 @@
+{
+  "include":["src"],
+  //이 폴더 통째로 컴파일 해주세요
+  "compilerOptions":{
+    "target": "esnext",
+    "outDir":"dist",
+    "rootDir": "./src",
+    "strict": true, //작성하지 않으면, true(매운맛)
+    "noImplicitAny": true, // strict 항목들 중 1개
+    "strictNullChecks": true,
+    "moduleDetection": "force"
+  }
+}
