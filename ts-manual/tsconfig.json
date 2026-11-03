@@ -7,7 +7,7 @@
     "rootDir": "./src",
     "strict": true, //작성하지 않으면, true(매운맛)
     "noImplicitAny": true, // strict 항목들 중 1개
-    "strictNullChecks": true,
+    "strictNullChecks": false,
     "moduleDetection": "force"
   }
 }
