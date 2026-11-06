@@ -1,0 +1,466 @@
+/* =========================================================
+   Todo App — style.module.css
+   TS 코드는 건드리지 않고 CSS만으로 디자인했습니다.
+   TS에서 문자열로 찍어내는 클래스(.delete, .completed)는
+   CSS Modules의 해시를 피하기 위해 :global()로 선택합니다.
+   ========================================================= */
+
+:global(:root) {
+  --bg-1: #eef2ff;
+  --bg-2: #fdf2f8;
+  --bg-3: #ecfeff;
+
+  --surface: rgba(255, 255, 255, 0.72);
+  --surface-solid: #ffffff;
+  --border: rgba(17, 24, 39, 0.08);
+
+  --text: #1f2937;
+  --text-soft: #6b7280;
+
+  --brand: #6366f1;
+  --brand-strong: #4f46e5;
+  --accent: #ec4899;
+  --danger: #f43f5e;
+
+  --radius: 18px;
+  --radius-sm: 12px;
+  --shadow: 0 24px 60px -24px rgba(49, 46, 129, 0.35);
+  --shadow-soft: 0 6px 16px -8px rgba(49, 46, 129, 0.45);
+}
+
+:global(*),
+:global(*::before),
+:global(*::after) {
+  box-sizing: border-box;
+}
+
+:global(body) {
+  margin: 0;
+  min-height: 100vh;
+  padding: 4rem 1.25rem;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  font-family: "Pretendard", -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo",
+    "Segoe UI", "Malgun Gothic", system-ui, sans-serif;
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+  background-color: var(--bg-1);
+  background-image:
+    radial-gradient(900px 600px at 12% -5%, var(--bg-2) 0%, transparent 60%),
+    radial-gradient(800px 600px at 95% 10%, var(--bg-3) 0%, transparent 55%),
+    linear-gradient(180deg, var(--bg-1) 0%, #ffffff 100%);
+  background-attachment: fixed;
+}
+
+:global(#app) {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+/* ---------------------------------------------------------
+   카드
+   --------------------------------------------------------- */
+.container {
+  max-width: 560px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 2.25rem 2rem 2.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+
+  background: var(--surface);
+  backdrop-filter: blur(14px) saturate(140%);
+  -webkit-backdrop-filter: blur(14px) saturate(140%);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  animation: rise 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* TS를 수정하지 않고 제목을 넣기 위해 가상 요소를 사용 */
+.container::before {
+  content: "✦ 오늘의 할 일";
+  font-size: 1.6rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  background: linear-gradient(100deg, var(--brand-strong), var(--accent));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* ---------------------------------------------------------
+   구분선
+   --------------------------------------------------------- */
+.container hr {
+  width: 100%;
+  height: 1px;
+  margin: 0;
+  border: 0;
+  background: linear-gradient(90deg, transparent, var(--border) 15%, var(--border) 85%, transparent);
+}
+
+/* ---------------------------------------------------------
+   버튼 공통
+   --------------------------------------------------------- */
+.container button {
+  border: none;
+  padding: 0.62rem 1.1rem;
+  border-radius: 999px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+  transition: transform 0.16s ease, box-shadow 0.16s ease, background-color 0.16s ease,
+    color 0.16s ease, opacity 0.16s ease;
+}
+
+.container button:active {
+  transform: translateY(1px) scale(0.98);
+}
+
+.container button:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 2px;
+}
+
+/* 추가 버튼 */
+.container button[type="submit"] {
+  background: linear-gradient(135deg, var(--brand), var(--brand-strong));
+  color: #fff;
+  box-shadow: var(--shadow-soft);
+  padding-inline: 1.35rem;
+}
+
+.container button[type="submit"]:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 12px 24px -10px rgba(79, 70, 229, 0.7);
+}
+
+/* 완료 항목 보기 / 전체 항목 보기 토글 */
+.container :global(.completed) {
+  align-self: flex-end;
+  background: rgba(99, 102, 241, 0.1);
+  color: var(--brand-strong);
+  border: 1px solid rgba(99, 102, 241, 0.22);
+  padding: 0.45rem 0.95rem;
+  font-size: 0.82rem;
+}
+
+.container :global(.completed):hover {
+  background: rgba(99, 102, 241, 0.18);
+  transform: translateY(-1px);
+}
+
+/* 삭제 버튼 */
+.container :global(.delete) {
+  background: transparent;
+  color: var(--danger);
+  border: 1px solid rgba(244, 63, 94, 0.28);
+  padding: 0.35rem 0.8rem;
+  font-size: 0.8rem;
+  opacity: 0.75;
+}
+
+.container :global(.delete):hover {
+  background: var(--danger);
+  border-color: var(--danger);
+  color: #fff;
+  opacity: 1;
+}
+
+/* ---------------------------------------------------------
+   입력 폼
+   --------------------------------------------------------- */
+.container form {
+  display: flex;
+  gap: 0.6rem;
+  align-items: center;
+  padding: 0.45rem;
+  background: var(--surface-solid);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  box-shadow: inset 0 1px 2px rgba(17, 24, 39, 0.04);
+  transition: border-color 0.18s ease, box-shadow 0.18s ease;
+}
+
+.container form:focus-within {
+  border-color: rgba(99, 102, 241, 0.55);
+  box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.12);
+}
+
+.container label {
+  padding-left: 0.85rem;
+  font-size: 0.86rem;
+  font-weight: 700;
+  color: var(--text-soft);
+  white-space: nowrap;
+}
+
+.container input[type="text"] {
+  flex: 1;
+  min-width: 0;
+  padding: 0.55rem 0.3rem;
+  border: none;
+  background: transparent;
+  font-size: 0.96rem;
+  font-family: inherit;
+  color: var(--text);
+}
+
+.container input[type="text"]:focus {
+  outline: none;
+}
+
+.container input[type="text"]::placeholder {
+  color: #9ca3af;
+}
+
+/* ---------------------------------------------------------
+   목록
+   --------------------------------------------------------- */
+.container ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.container li {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.85rem 1rem;
+  background: var(--surface-solid);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--brand);
+  border-radius: var(--radius-sm);
+  box-shadow: 0 2px 8px -6px rgba(17, 24, 39, 0.35);
+  transition: transform 0.16s ease, box-shadow 0.16s ease, border-color 0.16s ease;
+  animation: slide-in 0.28s ease both;
+}
+
+.container li:hover {
+  transform: translateX(3px);
+  box-shadow: 0 10px 22px -14px rgba(17, 24, 39, 0.5);
+}
+
+/* 체크박스 */
+.container input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  flex: 0 0 auto;
+  width: 22px;
+  height: 22px;
+  margin: 0;
+  border: 2px solid #d1d5db;
+  border-radius: 7px;
+  background-color: #fff;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 14px 14px;
+  cursor: pointer;
+  transition: background-color 0.16s ease, border-color 0.16s ease, transform 0.16s ease;
+}
+
+.container input[type="checkbox"]:hover {
+  border-color: var(--brand);
+  transform: scale(1.06);
+}
+
+.container input[type="checkbox"]:checked {
+  background-color: var(--brand);
+  border-color: var(--brand);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='white' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 8.5l3.2 3.2L13 5'/%3E%3C/svg%3E");
+}
+
+.container input[type="checkbox"]:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 2px;
+}
+
+/* 내용 (contenteditable) */
+.container span {
+  flex: 1;
+  min-width: 0;
+  line-height: 1.6;
+  font-size: 0.98rem;
+  padding: 0.15rem 0.4rem;
+  border-radius: 8px;
+  word-break: break-word;
+  transition: background-color 0.16s ease, color 0.16s ease, opacity 0.16s ease;
+}
+
+.container span:hover {
+  background: rgba(99, 102, 241, 0.07);
+}
+
+.container span:focus {
+  outline: none;
+  background: rgba(99, 102, 241, 0.1);
+  box-shadow: inset 0 0 0 1px rgba(99, 102, 241, 0.35);
+}
+
+/* 체크된 항목은 CSS만으로 완료 표시 */
+.container input[type="checkbox"]:checked + span {
+  color: var(--text-soft);
+  text-decoration: line-through;
+  text-decoration-color: rgba(107, 114, 128, 0.6);
+  opacity: 0.65;
+}
+
+/* ---------------------------------------------------------
+   빈 상태
+   --------------------------------------------------------- */
+.empty {
+  padding: 2.5rem 1rem;
+  text-align: center;
+  border: 1px dashed rgba(99, 102, 241, 0.3);
+  border-radius: var(--radius-sm);
+  background: rgba(99, 102, 241, 0.04);
+  animation: rise 0.35s ease both;
+}
+
+.empty h3 {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-soft);
+  letter-spacing: -0.01em;
+}
+
+/* ---------------------------------------------------------
+   애니메이션
+   --------------------------------------------------------- */
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slide-in {
+  from {
+    opacity: 0;
+    transform: translateX(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* ---------------------------------------------------------
+   반응형
+   --------------------------------------------------------- */
+@media (max-width: 520px) {
+  :global(body) {
+    padding: 2rem 0.9rem;
+  }
+
+  .container {
+    padding: 1.75rem 1.25rem 2rem;
+    border-radius: 16px;
+  }
+
+  .container::before {
+    font-size: 1.35rem;
+  }
+
+  .container form {
+    flex-wrap: wrap;
+    border-radius: var(--radius-sm);
+    padding: 0.75rem;
+  }
+
+  .container label {
+    padding-left: 0.2rem;
+  }
+
+  .container input[type="text"] {
+    flex: 1 1 100%;
+    order: 2;
+    padding: 0.55rem 0.2rem;
+  }
+
+  .container button[type="submit"] {
+    order: 3;
+    margin-left: auto;
+  }
+}
+
+/* ---------------------------------------------------------
+   다크 모드
+   --------------------------------------------------------- */
+@media (prefers-color-scheme: dark) {
+  :global(:root) {
+    --bg-1: #0b1020;
+    --bg-2: #1b1038;
+    --bg-3: #07202b;
+
+    --surface: rgba(23, 28, 48, 0.72);
+    --surface-solid: #171c30;
+    --border: rgba(255, 255, 255, 0.09);
+
+    --text: #e8eaf4;
+    --text-soft: #9aa3bd;
+
+    --brand: #818cf8;
+    --brand-strong: #6366f1;
+    --accent: #f472b6;
+    --danger: #fb7185;
+
+    --shadow: 0 28px 70px -28px rgba(0, 0, 0, 0.8);
+    --shadow-soft: 0 6px 18px -8px rgba(0, 0, 0, 0.7);
+  }
+
+  :global(body) {
+    background-image:
+      radial-gradient(900px 600px at 12% -5%, var(--bg-2) 0%, transparent 60%),
+      radial-gradient(800px 600px at 95% 10%, var(--bg-3) 0%, transparent 55%),
+      linear-gradient(180deg, var(--bg-1) 0%, #05070f 100%);
+  }
+
+  .container input[type="checkbox"] {
+    background-color: #0f1324;
+    border-color: #3a4060;
+  }
+
+  .container :global(.completed) {
+    background: rgba(129, 140, 248, 0.14);
+    color: #c7cbff;
+    border-color: rgba(129, 140, 248, 0.3);
+  }
+
+  .container span:hover {
+    background: rgba(129, 140, 248, 0.12);
+  }
+
+  .empty {
+    background: rgba(129, 140, 248, 0.06);
+    border-color: rgba(129, 140, 248, 0.28);
+  }
+}
+
+/* 모션 최소화 선호 */
+@media (prefers-reduced-motion: reduce) {
+  .container,
+  .container li,
+  .empty {
+    animation: none;
+  }
+
+  .container *,
+  .container *::before {
+    transition-duration: 0.01ms !important;
+  }
+}
